@@ -1,7 +1,8 @@
-# build: mingw32-make LLVM=D:\LLVM dirs gz src
+# build: mingw32-make LLVM=D:\LLVM dirs gz src cmake
 
 CMAKE_VER = 3.4.1
 CMAKE = cmake-$(CMAKE_VER)
+
 LLVM_VER = 3.7.1
 LLVM = llvm-$(LLVM_VER)
 CLANG = cfe-$(LLVM_VER)
@@ -32,4 +33,16 @@ $(GZ)/$(LLVM_GZ):
 $(GZ)/$(CLANG_GZ):
 	$(WGET) http://llvm.org/releases/$(LLVM_VER)/$(CLANG_GZ)
 $(GZ)/$(LLRT_GZ):
-	$(WGET) http://llvm.org/releases/$(LLVM_VER)/$(LLRT_GZ)	
+	$(WGET) http://llvm.org/releases/$(LLVM_VER)/$(LLRT_GZ)
+
+.PHONY: src
+src: $(SRC)/$(LLVM)/README
+
+$(SRC)/$(LLVM)/README: $(GZ)/$(LLVM_GZ)
+	cd $(SRC) && rm -rf $(LLVM).src $(LLVM) &&\
+  	xzcat $< | tar x && mv $(LLVM).src $(LLVM) && touch $@
+
+.PHONY: cmake
+cmake:
+	cmake-gui
+
