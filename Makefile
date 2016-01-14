@@ -3,6 +3,21 @@
 LLVM_VER = 3.6.2
 #3.7.1 .0
 
+PFX = D:/LLVM
+CMAKE_CFG = \
+	-DBUG_REPORT_URL=https://github.com/ponyatov/LLVMwin32build
+LLVM_CMAKE_CFG = $(CMAKE_CFG) \
+	-DCMAKE_BUILD_TYPE=Debug \
+	-DCMAKE_INSTALL_PREFIX=$(PFX) \
+	-DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=4 \
+	-DLLVM_EXTERNAL_MSBUILD_BUILD=OFF -DCMAKE_GNUtoMS=OFF \
+	-DLLVM_INSTALL_TOOLCHAIN_ONLY=ON \
+	-DBUILD_SHARED_LIBS=OFF \
+	-DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_TARGET_TRIPLE=i386-pc-mingw32
+#-DLLVM_TARGETS_TO_BUILD=host \
+#-DLLVM_TARGETS_TO_BUILD=X86;ARM \
+#-DLLVM_DEFAULT_TARGET_TRIPLE=i386-pc-mingw32 \
+
 MINGW = C:/MinGW
 XPATH = "$(MINGW)/bin;$(MINGW)/CMake/bin"
 #$(MINGW)/msys/1.0/bin;
@@ -19,17 +34,9 @@ LLRT_GZ = $(LLRT).src.tar.xz
 
 GZ = $(CURDIR)/gz
 SRC = $(CURDIR)/src
-PFX = D:/LLVM
 TMP = D:/tmp/$(LLVM)
 
 DIRS = $(GZ) $(SRC) $(PFX) $(TMP)
-
-LLVM_CMAKE_CFG = \
-	-DCMAKE_BUILD_TYPE=Debug \
-	-DCMAKE_INSTALL_PREFIX=$(PFX) \
-	-DBUILD_SHARED_LIBS=ON \
-	-DLLVM_TARGETS_TO_BUILD=host \
-	-DLLVM_PARALLEL_COMPILE_JOBS=4
 
 .PHONY: dirs
 dirs:
@@ -63,4 +70,6 @@ cmake-cfg:
 	cd $(TMP) && cmake -G "MinGW Makefiles" $(LLVM_CMAKE_CFG) $(SRC)/$(LLVM)
 .PHONY: cmake-build
 cmake-build:	
-	cd $(TMP) && cmake --build .
+	cd $(TMP) && cmake --build . 
+cmake-install:
+	cd $(TMP) && cmake --build . --target install
