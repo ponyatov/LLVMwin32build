@@ -13,8 +13,8 @@ LLRT_GZ = $(LLRT).src.tar.xz
 
 GZ = $(CURDIR)/gz
 SRC = $(CURDIR)/src
-PFX = D:\LLVM
-TMP = D:\tmp\$(LLVM)
+PFX = D:/LLVM
+TMP = D:/tmp/$(LLVM)
 
 DIRS = $(GZ) $(SRC) $(PFX) $(TMP)
 
@@ -44,5 +44,15 @@ $(SRC)/$(LLVM)/README: $(GZ)/$(LLVM_GZ)
 
 .PHONY: cmake
 cmake:
-	cmake-gui
+	 rm -rf $(TMP)/* && $(MAKE) PATH="C:/MinGW/bin;C:/MinGW/CMake/bin" cmake-gui
+
+.PHONY: cmake-gui
+cmake-gui:	
+		cd $(TMP) && cmake \
+			-G "MinGW Makefiles" \
+			-DCMAKE_BUILD_TYPE=Debug \
+			-DCMAKE_INSTALL_PREFIX=$(PFX) \
+			-DBUILD_SHARED_LIBS=ON \
+			-DLLVM_TARGETS_TO_BUILD=X86;ARM \
+			$(SRC)/$(LLVM)
 
