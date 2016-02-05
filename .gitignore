@@ -2,3 +2,7 @@
 *.swp
 gz/
 src/
+bin/
+include/
+lib/
+share/
